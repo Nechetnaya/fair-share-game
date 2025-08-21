@@ -39,44 +39,106 @@ export default function WelcomePage() {
             </p>
           </div>
           
-          {/* Hero Illustration */}
+          {/* Hero Illustration - Complete household scene */}
           <div className="fs-gradient-hero rounded-3xl p-16 my-16">
             <div className="flex items-center justify-center">
-              {/* Modern minimalist household scene */}
-              <div className="relative w-full max-w-md h-64 flex items-center justify-center">
-                {/* Modern kitchen counter scene */}
-                <div className="relative">
-                  {/* Main kitchen island */}
-                  <div className="w-40 h-20 bg-card rounded-2xl shadow-lg relative border border-border">
-                    {/* Sink area */}
-                    <div className="absolute top-3 left-8 w-24 h-14 bg-muted rounded-xl">
-                      <div className="w-20 h-10 bg-card rounded-lg absolute top-2 left-2 shadow-inner"></div>
-                      <div className="w-2 h-2 fs-primary-bg rounded-full absolute top-1 right-2"></div>
-                    </div>
-                    {/* Modern faucet */}
-                    <div className="absolute -top-6 left-16 w-1 h-8 bg-muted-foreground rounded-full"></div>
-                    <div className="absolute -top-8 left-14 w-5 h-3 bg-muted-foreground rounded-t-full"></div>
-                  </div>
-                  
-                  {/* Floating dishes - modern style */}
-                  <div className="absolute -right-8 top-0 space-y-2">
-                    <div className="w-8 h-8 bg-card rounded-full border-2 border-muted shadow-md"></div>
-                    <div className="w-6 h-6 bg-card rounded-full border-2 border-muted shadow-md"></div>
-                    <div className="w-5 h-5 bg-card rounded-full border-2 border-muted shadow-md"></div>
-                  </div>
-                  
-                  {/* Modern cleaning supplies */}
-                  <div className="absolute -left-8 top-4 space-y-3">
-                    <div className="w-4 h-10 fs-success-bg rounded-full shadow-sm"></div>
-                    <div className="w-5 h-8 fs-neutral-bg rounded-xl shadow-sm"></div>
-                  </div>
-                  
-                  {/* Subtle accent elements */}
-                  <div className="absolute top-16 left-20 w-2 h-2 fs-primary-bg rounded-full opacity-60"></div>
-                  <div className="absolute top-18 left-8 w-1 h-1 fs-success-bg rounded-full opacity-40"></div>
-                  <div className="absolute top-14 right-2 w-1 h-1 fs-neutral-bg rounded-full opacity-50"></div>
-                </div>
-              </div>
+              <svg width="400" height="280" viewBox="0 0 400 280" className="w-full max-w-lg">
+                {/* Background room */}
+                <rect x="0" y="150" width="400" height="130" fill="hsl(210, 20%, 95%)" />
+                <rect x="0" y="0" width="400" height="150" fill="hsl(210, 30%, 97%)" />
+                
+                {/* Kitchen counter */}
+                <rect x="50" y="120" width="120" height="60" fill="hsl(210, 15%, 85%)" stroke="hsl(210, 20%, 80%)" strokeWidth="2" rx="8" />
+                
+                {/* Kitchen sink */}
+                <rect x="70" y="130" width="80" height="40" fill="hsl(210, 25%, 90%)" rx="6" />
+                <rect x="75" y="135" width="70" height="30" fill="hsl(210, 30%, 95%)" rx="4" />
+                <circle cx="85" cy="145" r="3" fill="hsl(219, 100%, 62%)" />
+                
+                {/* Faucet */}
+                <rect x="105" y="115" width="4" height="15" fill="hsl(210, 15%, 60%)" rx="2" />
+                <path d="M100 115 Q107 110 114 115" stroke="hsl(210, 15%, 60%)" strokeWidth="3" fill="none" />
+                
+                {/* Dishes stack */}
+                <g transform="translate(180, 125)">
+                  <circle cx="0" cy="0" r="12" fill="hsl(0, 0%, 100%)" stroke="hsl(210, 15%, 85%)" strokeWidth="2" />
+                  <circle cx="0" cy="-3" r="12" fill="hsl(0, 0%, 100%)" stroke="hsl(210, 15%, 85%)" strokeWidth="2" />
+                  <circle cx="0" cy="-6" r="12" fill="hsl(0, 0%, 100%)" stroke="hsl(210, 15%, 85%)" strokeWidth="2" />
+                </g>
+                
+                {/* Cleaning supplies */}
+                <g transform="translate(25, 140)">
+                  <rect x="0" y="0" width="8" height="25" fill="hsl(142, 69%, 48%)" rx="4" />
+                  <rect x="10" y="5" width="10" height="20" fill="hsl(45, 93%, 58%)" rx="2" />
+                  <circle cx="4" cy="-3" r="3" fill="hsl(142, 69%, 65%)" />
+                </g>
+                
+                {/* Table */}
+                <rect x="220" y="140" width="100" height="8" fill="hsl(30, 25%, 75%)" rx="4" />
+                <rect x="240" y="148" width="4" height="30" fill="hsl(30, 25%, 70%)" />
+                <rect x="276" y="148" width="4" height="30" fill="hsl(30, 25%, 70%)" />
+                
+                {/* Chair */}
+                <rect x="250" y="115" width="25" height="35" fill="hsl(210, 15%, 80%)" rx="3" />
+                <rect x="250" y="145" width="25" height="4" fill="hsl(210, 15%, 75%)" />
+                <rect x="250" y="150" width="4" height="25" fill="hsl(210, 15%, 75%)" />
+                <rect x="271" y="150" width="4" height="25" fill="hsl(210, 15%, 75%)" />
+                
+                {/* Person 1 doing dishes */}
+                <g transform="translate(90, 80)">
+                  <circle cx="0" cy="0" r="15" fill="hsl(25, 50%, 85%)" stroke="hsl(25, 50%, 75%)" strokeWidth="2" />
+                  <circle cx="-4" cy="-3" r="2" fill="hsl(210, 25%, 25%)" />
+                  <circle cx="4" cy="-3" r="2" fill="hsl(210, 25%, 25%)" />
+                  <path d="M -6 6 Q 0 10 6 6" stroke="hsl(210, 25%, 25%)" strokeWidth="1.5" fill="none" />
+                  <path d="M -15 -8 Q 0 -20 15 -8" fill="hsl(30, 40%, 60%)" />
+                  <rect x="-12" y="15" width="24" height="35" fill="hsl(219, 100%, 85%)" rx="12" />
+                  <rect x="-20" y="20" width="8" height="25" fill="hsl(25, 50%, 85%)" rx="4" />
+                  <rect x="12" y="20" width="8" height="25" fill="hsl(25, 50%, 85%)" rx="4" />
+                  <circle cx="-24" cy="48" r="4" fill="hsl(25, 50%, 80%)" />
+                  <circle cx="16" cy="48" r="4" fill="hsl(25, 50%, 80%)" />
+                </g>
+                
+                {/* Person 2 at table */}
+                <g transform="translate(300, 85)">
+                  <circle cx="0" cy="0" r="15" fill="hsl(25, 50%, 90%)" stroke="hsl(25, 50%, 80%)" strokeWidth="2" />
+                  <circle cx="-4" cy="-3" r="2" fill="hsl(210, 25%, 25%)" />
+                  <circle cx="4" cy="-3" r="2" fill="hsl(210, 25%, 25%)" />
+                  <path d="M -6 6 Q 0 10 6 6" stroke="hsl(210, 25%, 25%)" strokeWidth="1.5" fill="none" />
+                  <path d="M -15 -8 Q 0 -18 15 -8" fill="hsl(20, 50%, 45%)" />
+                  <rect x="-12" y="15" width="24" height="35" fill="hsl(142, 69%, 85%)" rx="12" />
+                  <rect x="-20" y="20" width="8" height="25" fill="hsl(25, 50%, 90%)" rx="4" />
+                  <rect x="12" y="20" width="8" height="25" fill="hsl(25, 50%, 90%)" rx="4" />
+                  <circle cx="-16" cy="48" r="4" fill="hsl(25, 50%, 85%)" />
+                  <circle cx="16" cy="48" r="4" fill="hsl(25, 50%, 85%)" />
+                </g>
+                
+                {/* Laptop on table */}
+                <g transform="translate(270, 130)">
+                  <rect x="0" y="0" width="20" height="12" fill="hsl(210, 15%, 65%)" rx="2" />
+                  <rect x="1" y="1" width="18" height="10" fill="hsl(210, 30%, 95%)" rx="1" />
+                  <rect x="0" y="12" width="20" height="2" fill="hsl(210, 15%, 70%)" rx="1" />
+                </g>
+                
+                {/* Plants for homey feeling */}
+                <g transform="translate(350, 120)">
+                  <rect x="0" y="15" width="12" height="8" fill="hsl(30, 30%, 70%)" rx="2" />
+                  <path d="M 6 15 Q 3 5 6 0 Q 9 5 6 15" fill="hsl(120, 50%, 50%)" />
+                  <path d="M 6 15 Q 1 8 0 3 Q 6 8 6 15" fill="hsl(120, 50%, 45%)" />
+                  <path d="M 6 15 Q 11 8 12 3 Q 6 8 6 15" fill="hsl(120, 50%, 45%)" />
+                </g>
+                
+                {/* Window */}
+                <rect x="320" y="30" width="60" height="80" fill="hsl(200, 50%, 85%)" stroke="hsl(210, 20%, 75%)" strokeWidth="3" rx="4" />
+                <line x1="350" y1="30" x2="350" y2="110" stroke="hsl(210, 20%, 75%)" strokeWidth="2" />
+                <line x1="320" y1="70" x2="380" y2="70" stroke="hsl(210, 20%, 75%)" strokeWidth="2" />
+                
+                {/* Subtle sparkles for cleanliness */}
+                <g opacity="0.6">
+                  <path d="M 120 60 L 125 65 L 120 70 L 115 65 Z" fill="hsl(45, 100%, 70%)" />
+                  <path d="M 160 90 L 163 93 L 160 96 L 157 93 Z" fill="hsl(45, 100%, 70%)" />
+                  <path d="M 200 50 L 203 53 L 200 56 L 197 53 Z" fill="hsl(45, 100%, 70%)" />
+                </g>
+              </svg>
             </div>
           </div>
 

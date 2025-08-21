@@ -187,11 +187,19 @@ export default function GamePage() {
   const currentTask = gameData.tasks[gameData.currentTaskIndex];
   const progress = `Задача ${gameData.currentTaskIndex + 1} из ${gameData.tasks.length}`;
 
-  // Calculate gradient intensity based on task count
-  const getParticipantGradient = (taskCount: number) => {
-    const maxTasks = Math.max(gameData.participant1Tasks, gameData.participant2Tasks, gameData.togetherTasks);
-    const intensity = maxTasks > 0 ? (taskCount / maxTasks) : 0;
-    return `linear-gradient(145deg, hsl(219, 100%, ${98 - intensity * 20}%), hsl(219, 100%, ${95 - intensity * 25}%))`;
+  // Calculate gradient intensity based on task count - darker with each task
+  const getParticipantGradient = (taskCount: number, isPlayer1: boolean = true) => {
+    if (taskCount === 0) {
+      return isPlayer1 
+        ? `linear-gradient(145deg, hsl(219, 100%, 98%), hsl(219, 100%, 95%))` 
+        : `linear-gradient(145deg, hsl(142, 69%, 98%), hsl(142, 69%, 95%))`;
+    }
+    
+    // Each task makes it progressively darker
+    const darkenAmount = taskCount * 8;
+    return isPlayer1 
+      ? `linear-gradient(145deg, hsl(219, 100%, ${98 - darkenAmount}%), hsl(219, 100%, ${95 - darkenAmount - 5}%))` 
+      : `linear-gradient(145deg, hsl(142, 69%, ${98 - darkenAmount}%), hsl(142, 69%, ${95 - darkenAmount - 5}%))`;
   };
 
   return (
@@ -281,19 +289,19 @@ export default function GamePage() {
                 id="participant1"
                 className="rounded-2xl p-6 text-center min-h-[120px] flex items-center justify-center border-2 border-dashed border-muted-foreground/30 transition-all"
                 style={{
-                  background: getParticipantGradient(gameData.participant1Tasks)
+                  background: getParticipantGradient(gameData.participant1Tasks, true)
                 }}
               >
                 <div>
-                  <div className="w-12 h-12 mx-auto mb-3 fs-primary-bg/10 rounded-full flex items-center justify-center">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-primary">
+                  <div className="w-8 h-8 mx-auto mb-2 fs-primary-bg/10 rounded-full flex items-center justify-center">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-primary">
                       <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                       <circle cx="12" cy="7" r="4"></circle>
                     </svg>
                   </div>
-                  <h3 className="font-semibold text-foreground mb-1">{gameData.participant1}</h3>
+                  <h3 className="font-medium text-foreground text-sm mb-1">{gameData.participant1}</h3>
                   <div className="text-2xl font-bold text-primary mb-2">{gameData.participant1Tasks}</div>
-                  <p className="text-sm text-muted-foreground">Перетащите задачу сюда</p>
+                  <p className="text-xs text-muted-foreground">Перетащите задачу сюда</p>
                 </div>
               </ParticipantDropArea>
 
@@ -302,19 +310,19 @@ export default function GamePage() {
                 id="participant2"
                 className="rounded-2xl p-6 text-center min-h-[120px] flex items-center justify-center border-2 border-dashed border-muted-foreground/30 transition-all"
                 style={{
-                  background: getParticipantGradient(gameData.participant2Tasks)
+                  background: getParticipantGradient(gameData.participant2Tasks, false)
                 }}
               >
                 <div>
-                  <div className="w-12 h-12 mx-auto mb-3 fs-success-bg/10 rounded-full flex items-center justify-center">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-success">
+                  <div className="w-8 h-8 mx-auto mb-2 fs-success-bg/10 rounded-full flex items-center justify-center">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-success">
                       <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                       <circle cx="12" cy="7" r="4"></circle>
                     </svg>
                   </div>
-                  <h3 className="font-semibold text-foreground mb-1">{gameData.participant2}</h3>
+                  <h3 className="font-medium text-foreground text-sm mb-1">{gameData.participant2}</h3>
                   <div className="text-2xl font-bold text-success mb-2">{gameData.participant2Tasks}</div>
-                  <p className="text-sm text-muted-foreground">Перетащите задачу сюда</p>
+                  <p className="text-xs text-muted-foreground">Перетащите задачу сюда</p>
                 </div>
               </ParticipantDropArea>
             </div>
