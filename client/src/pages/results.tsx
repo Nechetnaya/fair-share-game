@@ -25,7 +25,7 @@ export default function ResultsPage() {
   };
 
   if (!gameData) {
-    return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+    return <div className="min-h-screen flex items-center justify-center">Загрузка...</div>;
   }
 
   const totalTasks = gameData.participant1Tasks + gameData.participant2Tasks + gameData.togetherTasks;
@@ -49,13 +49,13 @@ export default function ResultsPage() {
           <span className="text-xl font-medium text-gray-900">Fair Share</span>
         </div>
         <nav className="hidden md:flex space-x-8">
-          <a href="#" className="text-gray-600 hover:text-gray-900">How it works</a>
-          <a href="#" className="text-gray-600 hover:text-gray-900">About</a>
+          <a href="#" className="text-gray-600 hover:text-gray-900">Как это работает</a>
+          <a href="#" className="text-gray-600 hover:text-gray-900">О игре</a>
           <Button 
             className="fair-share-blue-bg text-white hover:opacity-90"
             onClick={handlePlayAgain}
           >
-            Play
+            Играть
           </Button>
         </nav>
       </header>
@@ -64,18 +64,18 @@ export default function ResultsPage() {
       <main className="flex-1 flex items-center justify-center px-6 lg:px-12">
         <div className="max-w-2xl w-full text-center space-y-8">
           <h1 className="text-3xl font-semibold text-gray-900">
-            Here's how tasks are shared in your family
+            Вот как распределяются задачи в вашей семье
           </h1>
           
           {/* Results Visualization */}
           <div className="space-y-6">
             <div className="text-left">
               <div className="flex justify-between items-center mb-2">
-                <span className="font-medium text-gray-900">Tasks</span>
+                <span className="font-medium text-gray-900">Задачи</span>
                 <span className="text-2xl font-bold">100%</span>
               </div>
               <div className="text-sm fair-share-green mb-4">
-                Total {gameData.togetherTasks > 0 ? '+' : ''}{gameData.togetherTasks > 0 ? Math.round((gameData.togetherTasks / totalTasks) * 10) : 0}%
+                Всего {gameData.togetherTasks > 0 ? '+' : ''}{gameData.togetherTasks > 0 ? Math.round((gameData.togetherTasks / totalTasks) * 10) : 0}%
               </div>
               
               {/* Progress Bars */}
@@ -96,7 +96,7 @@ export default function ResultsPage() {
                 
                 <ProgressBar
                   value={togetherPercent}
-                  label="Together"
+                  label="Вместе"
                   percentage={`${togetherPercent}%`}
                   barColor="fair-share-green-bg"
                 />
@@ -110,7 +110,7 @@ export default function ResultsPage() {
           </div>
 
           <p className="text-gray-600">
-            Remember: sharing household responsibilities helps reduce stress and increase well-being
+            Помните: справедливое распределение домашних обязанностей помогает снизить стресс и повысить благополучие
           </p>
           
           <Button 
@@ -118,7 +118,7 @@ export default function ResultsPage() {
             className="fair-share-blue-bg text-white px-8 py-3 text-lg font-medium hover:opacity-90"
             onClick={handlePlayAgain}
           >
-            Play again
+            Играть снова
           </Button>
         </div>
       </main>

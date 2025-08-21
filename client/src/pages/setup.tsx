@@ -44,9 +44,9 @@ export default function SetupPage() {
           <span className="text-xl font-medium text-gray-900">Fair Share Game</span>
         </div>
         <nav className="hidden md:flex space-x-8">
-          <a href="#" className="text-gray-600 hover:text-gray-900">Home</a>
-          <a href="#" className="text-gray-600 hover:text-gray-900">About</a>
-          <a href="#" className="text-gray-600 hover:text-gray-900">Contact</a>
+          <a href="#" className="text-gray-600 hover:text-gray-900">Главная</a>
+          <a href="#" className="text-gray-600 hover:text-gray-900">О игре</a>
+          <a href="#" className="text-gray-600 hover:text-gray-900">Контакты</a>
         </nav>
       </header>
 
@@ -54,7 +54,7 @@ export default function SetupPage() {
       <main className="flex-1 flex items-center justify-center px-6 lg:px-12">
         <div className="max-w-md w-full space-y-8">
           <div className="text-center">
-            <h1 className="text-2xl font-semibold text-gray-900 mb-8">Setup your game</h1>
+            <h1 className="text-2xl font-semibold text-gray-900 mb-8">Настройка игры</h1>
           </div>
 
           <div className="space-y-6">
@@ -62,14 +62,14 @@ export default function SetupPage() {
             <div className="space-y-4">
               <Input
                 type="text"
-                placeholder="Participant 1 Name"
+                placeholder="Имя участника 1"
                 value={gameData.participant1}
                 onChange={(e) => setGameData(prev => ({ ...prev, participant1: e.target.value }))}
                 className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
               />
               <Input
                 type="text"
-                placeholder="Participant 2 Name"
+                placeholder="Имя участника 2"
                 value={gameData.participant2}
                 onChange={(e) => setGameData(prev => ({ ...prev, participant2: e.target.value }))}
                 className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
@@ -78,7 +78,7 @@ export default function SetupPage() {
 
             {/* Household Conditions */}
             <div className="space-y-4">
-              <h3 className="text-lg font-medium text-gray-900">Household Conditions</h3>
+              <h3 className="text-lg font-medium text-gray-900">Условия дома</h3>
               
               {/* Home Type */}
               <div className="flex space-x-3">
@@ -88,7 +88,7 @@ export default function SetupPage() {
                   className={`flex-1 ${gameData.homeType === 'house' ? 'fair-share-blue-bg text-white' : ''}`}
                   onClick={() => handleHomeTypeSelect('house')}
                 >
-                  House
+                  Дом
                 </Button>
                 <Button
                   type="button"
@@ -96,7 +96,7 @@ export default function SetupPage() {
                   className={`flex-1 ${gameData.homeType === 'apartment' ? 'fair-share-blue-bg text-white' : ''}`}
                   onClick={() => handleHomeTypeSelect('apartment')}
                 >
-                  Apartment
+                  Квартира
                 </Button>
               </div>
 
@@ -111,7 +111,7 @@ export default function SetupPage() {
                     }
                   />
                   <label htmlFor="children" className="text-gray-700 cursor-pointer">
-                    Children
+                    Дети
                   </label>
                 </div>
                 <div className="flex items-center space-x-3">
@@ -123,7 +123,7 @@ export default function SetupPage() {
                     }
                   />
                   <label htmlFor="pets" className="text-gray-700 cursor-pointer">
-                    Pets
+                    Домашние животные
                   </label>
                 </div>
                 <div className="flex items-center space-x-3">
@@ -135,7 +135,7 @@ export default function SetupPage() {
                     }
                   />
                   <label htmlFor="car" className="text-gray-700 cursor-pointer">
-                    Car
+                    Машина
                   </label>
                 </div>
               </div>
@@ -146,7 +146,7 @@ export default function SetupPage() {
               className="w-full fair-share-blue-bg text-white px-6 py-3 font-medium hover:opacity-90"
               disabled={!gameData.homeType}
             >
-              Next
+              Далее
             </Button>
           </div>
         </div>

@@ -112,15 +112,15 @@ export function generateTasks(conditions: {
 }
 
 export const supportiveMessages = [
-  'Great teamwork!',
+  'Отличная работа в команде!',
   'Здорово, когда задачи делятся!',
   'Поддержка и партнёрство делают жизнь легче',
-  'Collaborative approach strengthens relationships!',
-  'Perfect example of shared responsibility!'
+  'Совместный подход укрепляет отношения!',
+  'Прекрасный пример общей ответственности!'
 ];
 
 export const researchQuotes = [
-  '"Fair distribution of household responsibilities is associated with higher relationship satisfaction" — Journal of Marriage and Family, 2019',
-  '"When partners share household tasks equally, both report lower stress levels and greater life satisfaction" — American Psychological Association, 2020',
-  '"Household labor sharing reduces mental load and improves overall well-being for both partners" — Mental Load Study, 2017'
+  '"Справедливое распределение домашних обязанностей связано с более высоким уровнем удовлетворённости отношениями" — Journal of Marriage and Family, 2019',
+  '"Когда мужчины берут на себя больше задач по дому, женщины демонстрируют меньше симптомов стресса и выгорания" — American Psychological Association, 2020',
+  '"Домашний труд и забота о детях — это не только физические действия, но и когнитивная и эмоциональная нагрузка" — Mental Load Study, 2017'
 ];

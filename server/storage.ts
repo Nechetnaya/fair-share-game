@@ -16,7 +16,13 @@ export class MemStorage implements IStorage {
   async saveGameResult(insertResult: InsertGameResult): Promise<GameResult> {
     const id = randomUUID();
     const result: GameResult = { 
-      ...insertResult, 
+      ...insertResult,
+      hasChildren: insertResult.hasChildren || false,
+      hasPets: insertResult.hasPets || false,
+      hasCar: insertResult.hasCar || false,
+      participant1Tasks: insertResult.participant1Tasks || 0,
+      participant2Tasks: insertResult.participant2Tasks || 0,
+      togetherTasks: insertResult.togetherTasks || 0,
       id,
       completedAt: new Date()
     };
