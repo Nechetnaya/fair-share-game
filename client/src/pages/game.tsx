@@ -12,11 +12,39 @@ import {
   useSensor,
   useSensors,
   DragEndEvent,
+  DragOverlay,
+  DragStartEvent,
 } from '@dnd-kit/core';
 import {
   useDraggable,
   useDroppable,
 } from '@dnd-kit/core';
+
+// Simple Task Card Component
+function TaskCard({ task, className }: { task: string; className?: string }) {
+  return (
+    <div className={`bg-white rounded-xl p-6 text-center shadow-lg border border-gray-200 ${className}`}>
+      <div className="mb-4">
+        {/* Simple minimalist kitchen/household illustration like in Figma */}
+        <div className="w-full h-32 bg-gradient-to-b from-gray-100 to-gray-200 rounded-xl flex items-center justify-center">
+          <div className="relative">
+            {/* Simple kitchen sink illustration */}
+            <div className="w-16 h-12 bg-gray-400 rounded-lg relative">
+              <div className="w-12 h-8 bg-gray-300 rounded-md absolute top-2 left-2"></div>
+              <div className="w-3 h-3 bg-blue-300 rounded-full absolute top-1 right-2"></div>
+              <div className="w-2 h-4 bg-gray-500 absolute bottom-0 left-6"></div>
+            </div>
+            {/* Simple dishes */}
+            <div className="absolute -right-4 top-2 w-6 h-6 bg-gray-200 rounded-full border-2 border-gray-300"></div>
+            <div className="absolute -right-2 top-6 w-4 h-4 bg-gray-200 rounded-full border-2 border-gray-300"></div>
+          </div>
+        </div>
+      </div>
+      <h2 className="text-lg font-semibold text-gray-900 mb-2">{task}</h2>
+      <p className="text-sm text-gray-500">Домашняя задача</p>
+    </div>
+  );
+}
 
 // Draggable Task Card Component
 function DraggableTaskCard({ task, id }: { task: string; id: string }) {
@@ -36,24 +64,11 @@ function DraggableTaskCard({ task, id }: { task: string; id: string }) {
       style={style}
       {...listeners}
       {...attributes}
-      className={`gradient-task rounded-2xl p-6 text-center text-white cursor-grab select-none transition-all ${
+      className={`cursor-grab select-none transition-all ${
         isDragging ? 'opacity-50 scale-95' : 'hover:scale-102'
       }`}
     >
-      <div className="mb-4">
-        {/* Improved task illustration */}
-        <div className="w-full h-32 bg-slate-600 rounded-xl opacity-80 flex items-center justify-center">
-          <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
-            {/* Task icon based on task type */}
-            <circle cx="30" cy="20" r="12" fill="currentColor" opacity="0.6"/>
-            <rect x="15" y="32" width="30" height="20" rx="4" fill="currentColor" opacity="0.7"/>
-            <circle cx="20" cy="42" r="3" fill="currentColor" opacity="0.8"/>
-            <circle cx="40" cy="42" r="3" fill="currentColor" opacity="0.8"/>
-          </svg>
-        </div>
-      </div>
-      <h2 className="text-xl font-semibold mb-2">{task}</h2>
-      <p className="text-sm opacity-75">Перетащите карточку в нужную область</p>
+      <TaskCard task={task} />
     </div>
   );
 }
@@ -62,15 +77,13 @@ function DraggableTaskCard({ task, id }: { task: string; id: string }) {
 function DroppableArea({ 
   id, 
   children, 
-  isOver,
   className 
 }: { 
   id: string; 
   children: React.ReactNode; 
-  isOver?: boolean;
   className?: string;
 }) {
-  const { setNodeRef } = useDroppable({
+  const { isOver, setNodeRef } = useDroppable({
     id,
   });
 
@@ -78,7 +91,7 @@ function DroppableArea({
     <div
       ref={setNodeRef}
       className={`${className} ${
-        isOver ? 'border-primary bg-primary/5 scale-102' : ''
+        isOver ? 'border-blue-400 bg-blue-50 scale-102' : ''
       } transition-all duration-200`}
     >
       {children}
@@ -91,9 +104,14 @@ export default function GamePage() {
   const [gameData, setGameData] = useState<GameData | null>(null);
   const [feedbackMessage, setFeedbackMessage] = useState<string>("");
   const [showFeedback, setShowFeedback] = useState(false);
+  const [activeId, setActiveId] = useState<string | null>(null);
   
   const sensors = useSensors(
-    useSensor(PointerSensor),
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    }),
     useSensor(KeyboardSensor)
   );
 
@@ -106,8 +124,13 @@ export default function GamePage() {
     setGameData(data);
   }, [setLocation]);
 
+  const handleDragStart = (event: DragStartEvent) => {
+    setActiveId(event.active.id as string);
+  };
+
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
+    setActiveId(null);
 
     if (!over || !gameData) return;
 
@@ -176,6 +199,7 @@ export default function GamePage() {
     <DndContext 
       sensors={sensors}
       collisionDetection={closestCenter}
+      onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
       <div className="min-h-screen flex flex-col">
@@ -216,7 +240,7 @@ export default function GamePage() {
               {/* Participant 1 */}
               <DroppableArea
                 id="participant1"
-                className="bg-gray-50 rounded-xl p-8 text-center border-2 border-dashed border-gray-200 hover:border-primary transition-all min-h-[120px] flex items-center justify-center"
+                className="bg-gray-50 rounded-xl p-8 text-center border-2 border-dashed border-gray-200 hover:border-blue-400 transition-all min-h-[120px] flex items-center justify-center"
               >
                 <div>
                   <div className="w-12 h-12 mx-auto mb-3 bg-blue-100 rounded-full flex items-center justify-center">
@@ -233,7 +257,7 @@ export default function GamePage() {
               {/* Participant 2 */}
               <DroppableArea
                 id="participant2"
-                className="bg-gray-50 rounded-xl p-8 text-center border-2 border-dashed border-gray-200 hover:border-primary transition-all min-h-[120px] flex items-center justify-center"
+                className="bg-gray-50 rounded-xl p-8 text-center border-2 border-dashed border-gray-200 hover:border-blue-400 transition-all min-h-[120px] flex items-center justify-center"
               >
                 <div>
                   <div className="w-12 h-12 mx-auto mb-3 bg-green-100 rounded-full flex items-center justify-center">
@@ -318,6 +342,10 @@ export default function GamePage() {
           </div>
         </main>
       </div>
+
+      <DragOverlay>
+        {activeId ? <TaskCard task={currentTask} className="rotate-3 shadow-2xl" /> : null}
+      </DragOverlay>
     </DndContext>
   );
 }
