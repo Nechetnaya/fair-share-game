@@ -20,28 +20,16 @@ import {
   useDroppable,
 } from '@dnd-kit/core';
 
-// Modern Task Card Component
+// Simplified Task Card Component with gradient and no images
 function TaskCard({ task, className }: { task: string; className?: string }) {
   return (
-    <div className={`fs-task-card rounded-2xl p-6 text-center transition-all ${className}`}>
-      <div className="mb-4">
-        {/* Modern minimalist task illustration */}
-        <div className="w-full h-32 fs-gradient-hero rounded-xl flex items-center justify-center">
-          <div className="relative">
-            {/* Simple modern task icon based on context */}
-            <div className="w-16 h-12 bg-card rounded-lg shadow-sm relative border border-border">
-              <div className="w-12 h-8 bg-muted rounded-md absolute top-2 left-2"></div>
-              <div className="w-3 h-3 fs-primary-bg rounded-full absolute top-1 right-2"></div>
-              <div className="w-2 h-4 bg-muted-foreground absolute bottom-0 left-6"></div>
-            </div>
-            {/* Simple accent elements */}
-            <div className="absolute -right-3 top-2 w-5 h-5 bg-card rounded-full border-2 border-border shadow-sm"></div>
-            <div className="absolute -right-1 top-6 w-3 h-3 bg-card rounded-full border-2 border-border shadow-sm"></div>
-          </div>
+    <div className={`fs-gradient-hero rounded-2xl p-8 text-center transition-all ${className}`}>
+      <div className="space-y-4">
+        <div className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
+          Домашняя задача
         </div>
+        <h2 className="text-2xl font-semibold text-foreground leading-tight">{task}</h2>
       </div>
-      <h2 className="text-lg font-semibold text-foreground mb-2">{task}</h2>
-      <p className="text-sm text-muted-foreground">Домашняя задача</p>
     </div>
   );
 }
@@ -73,15 +61,17 @@ function DraggableTaskCard({ task, id }: { task: string; id: string }) {
   );
 }
 
-// Droppable Area Component
-function DroppableArea({ 
+// Droppable Area Component for participants
+function ParticipantDropArea({ 
   id, 
   children, 
-  className 
+  className,
+  style
 }: { 
   id: string; 
   children: React.ReactNode; 
   className?: string;
+  style?: React.CSSProperties;
 }) {
   const { isOver, setNodeRef } = useDroppable({
     id,
@@ -90,6 +80,7 @@ function DroppableArea({
   return (
     <div
       ref={setNodeRef}
+      style={style}
       className={`${className} ${
         isOver ? 'border-primary scale-[1.02] shadow-lg' : ''
       } transition-all duration-200`}
@@ -140,10 +131,6 @@ export default function GamePage() {
       assignTask(1);
     } else if (droppableId === 'participant2') {
       assignTask(2);
-    } else if (droppableId === 'together') {
-      assignTask('together');
-    } else if (droppableId === 'not-relevant') {
-      assignTask('not-relevant');
     }
   };
 
@@ -200,6 +187,13 @@ export default function GamePage() {
   const currentTask = gameData.tasks[gameData.currentTaskIndex];
   const progress = `Задача ${gameData.currentTaskIndex + 1} из ${gameData.tasks.length}`;
 
+  // Calculate gradient intensity based on task count
+  const getParticipantGradient = (taskCount: number) => {
+    const maxTasks = Math.max(gameData.participant1Tasks, gameData.participant2Tasks, gameData.togetherTasks);
+    const intensity = maxTasks > 0 ? (taskCount / maxTasks) : 0;
+    return `linear-gradient(145deg, hsl(219, 100%, ${98 - intensity * 20}%), hsl(219, 100%, ${95 - intensity * 25}%))`;
+  };
+
   return (
     <DndContext 
       sensors={sensors}
@@ -228,8 +222,8 @@ export default function GamePage() {
 
         {/* Game Interface */}
         <main className="flex-1 px-6 lg:px-12 py-8">
-          <div className="max-w-6xl mx-auto">
-            <div className="text-center space-y-2 mb-8">
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center space-y-2 mb-12">
               <h1 className="text-3xl font-semibold text-foreground">Fair Share Game</h1>
               <div className="flex items-center justify-center space-x-4">
                 <div className="text-muted-foreground text-lg">{progress}</div>
@@ -245,87 +239,30 @@ export default function GamePage() {
             </div>
 
             {/* Current Task Card */}
-            <div className="flex justify-center mb-12">
-              <div className="max-w-md w-full">
+            <div className="flex justify-center mb-8">
+              <div className="max-w-lg w-full">
                 <DraggableTaskCard 
                   task={currentTask} 
                   id="current-task"
                 />
-                <p className="text-center text-muted-foreground mt-4 text-sm">
-                  Перетащите карточку в нужную область
-                </p>
               </div>
             </div>
 
-            {/* Drop Areas */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-              {/* Participant 1 */}
-              <DroppableArea
-                id="participant1"
-                className="fs-drop-zone rounded-2xl p-8 text-center min-h-[140px] flex items-center justify-center"
+            {/* Action Buttons under task card */}
+            <div className="flex justify-center space-x-4 mb-12">
+              <Button
+                onClick={() => assignTask('not-relevant')}
+                variant="outline"
+                className="px-6 py-2 text-sm rounded-full border-2 hover:bg-muted/50 transition-colors"
               >
-                <div>
-                  <div className="w-16 h-16 mx-auto mb-4 fs-primary-bg/10 rounded-full flex items-center justify-center">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-primary">
-                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                      <circle cx="12" cy="7" r="4"></circle>
-                    </svg>
-                  </div>
-                  <h3 className="font-semibold text-foreground text-lg mb-2">{gameData.participant1}</h3>
-                  <p className="text-sm text-muted-foreground">Перетащите задачу сюда</p>
-                </div>
-              </DroppableArea>
-
-              {/* Participant 2 */}
-              <DroppableArea
-                id="participant2"
-                className="fs-drop-zone rounded-2xl p-8 text-center min-h-[140px] flex items-center justify-center"
+                ❌ Неактуально
+              </Button>
+              <Button
+                onClick={() => assignTask('together')}
+                className="fs-success-bg text-white px-6 py-2 text-sm rounded-full hover:opacity-90 transition-opacity"
               >
-                <div>
-                  <div className="w-16 h-16 mx-auto mb-4 fs-success-bg/10 rounded-full flex items-center justify-center">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-success">
-                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                      <circle cx="12" cy="7" r="4"></circle>
-                    </svg>
-                  </div>
-                  <h3 className="font-semibold text-foreground text-lg mb-2">{gameData.participant2}</h3>
-                  <p className="text-sm text-muted-foreground">Перетащите задачу сюда</p>
-                </div>
-              </DroppableArea>
-            </div>
-
-            {/* Special Drop Areas */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-              <DroppableArea
-                id="not-relevant"
-                className="bg-muted/50 hover:bg-muted/70 rounded-xl p-6 text-center border-2 border-dashed border-muted-foreground/30 transition-all min-h-[100px] flex items-center justify-center"
-              >
-                <div>
-                  <div className="w-12 h-12 mx-auto mb-3 bg-muted-foreground/10 rounded-full flex items-center justify-center">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-muted-foreground">
-                      <line x1="18" y1="6" x2="6" y2="18"></line>
-                      <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
-                  </div>
-                  <p className="font-medium text-muted-foreground">Неактуально</p>
-                </div>
-              </DroppableArea>
-
-              <DroppableArea
-                id="together"
-                className="fs-success-bg hover:opacity-90 rounded-xl p-6 text-center border-2 border-dashed border-success transition-all min-h-[100px] flex items-center justify-center text-white"
-              >
-                <div>
-                  <div className="w-12 h-12 mx-auto mb-3 bg-white/20 rounded-full flex items-center justify-center">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-white">
-                      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                      <circle cx="9" cy="7" r="4"></circle>
-                      <path d="m22 21-3-3m0 0a5 5 0 0 0-7 0 5 5 0 0 0 7 0z"></path>
-                    </svg>
-                  </div>
-                  <p className="font-medium">Делаем вместе</p>
-                </div>
-              </DroppableArea>
+                🤝 Делаем вместе
+              </Button>
             </div>
 
             {/* Feedback Message */}
@@ -337,31 +274,49 @@ export default function GamePage() {
               </div>
             )}
 
-            {/* Task Counter */}
-            <div className="flex justify-center">
-              <div className="grid grid-cols-3 gap-6 text-center">
-                <div className="fs-card rounded-xl p-4">
-                  <div className="flex items-center justify-center space-x-2 mb-2">
-                    <div className="w-3 h-3 fs-primary-bg rounded-full"></div>
-                    <span className="font-medium text-foreground text-sm">{gameData.participant1}</span>
+            {/* Participant Drop Areas with gradient and counters */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {/* Participant 1 */}
+              <ParticipantDropArea
+                id="participant1"
+                className="rounded-2xl p-6 text-center min-h-[120px] flex items-center justify-center border-2 border-dashed border-muted-foreground/30 transition-all"
+                style={{
+                  background: getParticipantGradient(gameData.participant1Tasks)
+                }}
+              >
+                <div>
+                  <div className="w-12 h-12 mx-auto mb-3 fs-primary-bg/10 rounded-full flex items-center justify-center">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-primary">
+                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                      <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
                   </div>
-                  <div className="text-3xl font-semibold text-primary">{gameData.participant1Tasks}</div>
+                  <h3 className="font-semibold text-foreground mb-1">{gameData.participant1}</h3>
+                  <div className="text-2xl font-bold text-primary mb-2">{gameData.participant1Tasks}</div>
+                  <p className="text-sm text-muted-foreground">Перетащите задачу сюда</p>
                 </div>
-                <div className="fs-card rounded-xl p-4">
-                  <div className="flex items-center justify-center space-x-2 mb-2">
-                    <div className="w-3 h-3 fs-success-bg rounded-full"></div>
-                    <span className="font-medium text-foreground text-sm">{gameData.participant2}</span>
+              </ParticipantDropArea>
+
+              {/* Participant 2 */}
+              <ParticipantDropArea
+                id="participant2"
+                className="rounded-2xl p-6 text-center min-h-[120px] flex items-center justify-center border-2 border-dashed border-muted-foreground/30 transition-all"
+                style={{
+                  background: getParticipantGradient(gameData.participant2Tasks)
+                }}
+              >
+                <div>
+                  <div className="w-12 h-12 mx-auto mb-3 fs-success-bg/10 rounded-full flex items-center justify-center">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-success">
+                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                      <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
                   </div>
-                  <div className="text-3xl font-semibold text-success">{gameData.participant2Tasks}</div>
+                  <h3 className="font-semibold text-foreground mb-1">{gameData.participant2}</h3>
+                  <div className="text-2xl font-bold text-success mb-2">{gameData.participant2Tasks}</div>
+                  <p className="text-sm text-muted-foreground">Перетащите задачу сюда</p>
                 </div>
-                <div className="fs-card rounded-xl p-4">
-                  <div className="flex items-center justify-center space-x-2 mb-2">
-                    <div className="w-3 h-3 fs-success-bg rounded-full"></div>
-                    <span className="font-medium text-foreground text-sm">Вместе</span>
-                  </div>
-                  <div className="text-3xl font-semibold text-success">{gameData.togetherTasks}</div>
-                </div>
-              </div>
+              </ParticipantDropArea>
             </div>
           </div>
         </main>
