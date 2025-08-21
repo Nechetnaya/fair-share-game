@@ -20,28 +20,28 @@ import {
   useDroppable,
 } from '@dnd-kit/core';
 
-// Simple Task Card Component
+// Modern Task Card Component
 function TaskCard({ task, className }: { task: string; className?: string }) {
   return (
-    <div className={`bg-white rounded-xl p-6 text-center shadow-lg border border-gray-200 ${className}`}>
+    <div className={`fs-task-card rounded-2xl p-6 text-center transition-all ${className}`}>
       <div className="mb-4">
-        {/* Simple minimalist kitchen/household illustration like in Figma */}
-        <div className="w-full h-32 bg-gradient-to-b from-gray-100 to-gray-200 rounded-xl flex items-center justify-center">
+        {/* Modern minimalist task illustration */}
+        <div className="w-full h-32 fs-gradient-hero rounded-xl flex items-center justify-center">
           <div className="relative">
-            {/* Simple kitchen sink illustration */}
-            <div className="w-16 h-12 bg-gray-400 rounded-lg relative">
-              <div className="w-12 h-8 bg-gray-300 rounded-md absolute top-2 left-2"></div>
-              <div className="w-3 h-3 bg-blue-300 rounded-full absolute top-1 right-2"></div>
-              <div className="w-2 h-4 bg-gray-500 absolute bottom-0 left-6"></div>
+            {/* Simple modern task icon based on context */}
+            <div className="w-16 h-12 bg-card rounded-lg shadow-sm relative border border-border">
+              <div className="w-12 h-8 bg-muted rounded-md absolute top-2 left-2"></div>
+              <div className="w-3 h-3 fs-primary-bg rounded-full absolute top-1 right-2"></div>
+              <div className="w-2 h-4 bg-muted-foreground absolute bottom-0 left-6"></div>
             </div>
-            {/* Simple dishes */}
-            <div className="absolute -right-4 top-2 w-6 h-6 bg-gray-200 rounded-full border-2 border-gray-300"></div>
-            <div className="absolute -right-2 top-6 w-4 h-4 bg-gray-200 rounded-full border-2 border-gray-300"></div>
+            {/* Simple accent elements */}
+            <div className="absolute -right-3 top-2 w-5 h-5 bg-card rounded-full border-2 border-border shadow-sm"></div>
+            <div className="absolute -right-1 top-6 w-3 h-3 bg-card rounded-full border-2 border-border shadow-sm"></div>
           </div>
         </div>
       </div>
-      <h2 className="text-lg font-semibold text-gray-900 mb-2">{task}</h2>
-      <p className="text-sm text-gray-500">Домашняя задача</p>
+      <h2 className="text-lg font-semibold text-foreground mb-2">{task}</h2>
+      <p className="text-sm text-muted-foreground">Домашняя задача</p>
     </div>
   );
 }
@@ -65,7 +65,7 @@ function DraggableTaskCard({ task, id }: { task: string; id: string }) {
       {...listeners}
       {...attributes}
       className={`cursor-grab select-none transition-all ${
-        isDragging ? 'opacity-50 scale-95' : 'hover:scale-102'
+        isDragging ? 'opacity-50 scale-95' : 'hover:scale-[1.02]'
       }`}
     >
       <TaskCard task={task} />
@@ -91,7 +91,7 @@ function DroppableArea({
     <div
       ref={setNodeRef}
       className={`${className} ${
-        isOver ? 'border-blue-400 bg-blue-50 scale-102' : ''
+        isOver ? 'border-primary scale-[1.02] shadow-lg' : ''
       } transition-all duration-200`}
     >
       {children}
@@ -189,7 +189,12 @@ export default function GamePage() {
   };
 
   if (!gameData) {
-    return <div className="min-h-screen flex items-center justify-center">Загрузка...</div>;
+    return <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="text-center">
+        <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+        <p className="text-muted-foreground">Загрузка игры...</p>
+      </div>
+    </div>;
   }
 
   const currentTask = gameData.tasks[gameData.currentTaskIndex];
@@ -202,27 +207,41 @@ export default function GamePage() {
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
-      <div className="min-h-screen flex flex-col">
+      <div className="min-h-screen bg-background">
         {/* Header */}
-        <header className="flex justify-between items-center p-6 lg:px-12">
+        <header className="flex justify-between items-center p-6 lg:px-12 lg:py-8">
           <div className="flex items-center">
-            <span className="text-xl font-medium text-gray-900">Fair Share Game</span>
+            <span className="text-2xl font-semibold text-foreground">Fair Share Game</span>
           </div>
-          <nav className="hidden md:flex space-x-8">
-            <a href="#" className="text-gray-600 hover:text-gray-900">Главная</a>
-            <a href="#" className="text-gray-600 hover:text-gray-900">О игре</a>
-            <a href="#" className="text-gray-600 hover:text-gray-900">Контакты</a>
+          <nav className="hidden md:flex items-center space-x-8">
+            <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+              Главная
+            </a>
+            <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+              О игре
+            </a>
+            <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+              Контакты
+            </a>
           </nav>
         </header>
 
         {/* Game Interface */}
         <main className="flex-1 px-6 lg:px-12 py-8">
           <div className="max-w-6xl mx-auto">
-            <h1 className="text-2xl font-semibold text-center text-gray-900 mb-8">Fair Share Game</h1>
-            
-            {/* Progress */}
-            <div className="text-center text-gray-600 mb-8">
-              <span className="text-lg">{progress}</span>
+            <div className="text-center space-y-2 mb-8">
+              <h1 className="text-3xl font-semibold text-foreground">Fair Share Game</h1>
+              <div className="flex items-center justify-center space-x-4">
+                <div className="text-muted-foreground text-lg">{progress}</div>
+                <div className="w-32 h-2 bg-muted rounded-full overflow-hidden">
+                  <div 
+                    className="h-full fs-primary-bg transition-all duration-500"
+                    style={{ 
+                      width: `${((gameData.currentTaskIndex) / gameData.tasks.length) * 100}%` 
+                    }}
+                  ></div>
+                </div>
+              </div>
             </div>
 
             {/* Current Task Card */}
@@ -232,42 +251,45 @@ export default function GamePage() {
                   task={currentTask} 
                   id="current-task"
                 />
+                <p className="text-center text-muted-foreground mt-4 text-sm">
+                  Перетащите карточку в нужную область
+                </p>
               </div>
             </div>
 
             {/* Drop Areas */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
               {/* Participant 1 */}
               <DroppableArea
                 id="participant1"
-                className="bg-gray-50 rounded-xl p-8 text-center border-2 border-dashed border-gray-200 hover:border-blue-400 transition-all min-h-[120px] flex items-center justify-center"
+                className="fs-drop-zone rounded-2xl p-8 text-center min-h-[140px] flex items-center justify-center"
               >
                 <div>
-                  <div className="w-12 h-12 mx-auto mb-3 bg-blue-100 rounded-full flex items-center justify-center">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-blue-600">
+                  <div className="w-16 h-16 mx-auto mb-4 fs-primary-bg/10 rounded-full flex items-center justify-center">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-primary">
                       <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                       <circle cx="12" cy="7" r="4"></circle>
                     </svg>
                   </div>
-                  <h3 className="font-medium text-gray-900 mb-2">{gameData.participant1}</h3>
-                  <p className="text-sm text-gray-600">Перетащите сюда задачу</p>
+                  <h3 className="font-semibold text-foreground text-lg mb-2">{gameData.participant1}</h3>
+                  <p className="text-sm text-muted-foreground">Перетащите задачу сюда</p>
                 </div>
               </DroppableArea>
 
               {/* Participant 2 */}
               <DroppableArea
                 id="participant2"
-                className="bg-gray-50 rounded-xl p-8 text-center border-2 border-dashed border-gray-200 hover:border-blue-400 transition-all min-h-[120px] flex items-center justify-center"
+                className="fs-drop-zone rounded-2xl p-8 text-center min-h-[140px] flex items-center justify-center"
               >
                 <div>
-                  <div className="w-12 h-12 mx-auto mb-3 bg-green-100 rounded-full flex items-center justify-center">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-green-600">
+                  <div className="w-16 h-16 mx-auto mb-4 fs-success-bg/10 rounded-full flex items-center justify-center">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-success">
                       <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                       <circle cx="12" cy="7" r="4"></circle>
                     </svg>
                   </div>
-                  <h3 className="font-medium text-gray-900 mb-2">{gameData.participant2}</h3>
-                  <p className="text-sm text-gray-600">Перетащите сюда задачу</p>
+                  <h3 className="font-semibold text-foreground text-lg mb-2">{gameData.participant2}</h3>
+                  <p className="text-sm text-muted-foreground">Перетащите задачу сюда</p>
                 </div>
               </DroppableArea>
             </div>
@@ -276,29 +298,29 @@ export default function GamePage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
               <DroppableArea
                 id="not-relevant"
-                className="bg-gray-100 hover:bg-gray-200 rounded-xl p-6 text-center border-2 border-dashed border-gray-300 transition-all min-h-[80px] flex items-center justify-center"
+                className="bg-muted/50 hover:bg-muted/70 rounded-xl p-6 text-center border-2 border-dashed border-muted-foreground/30 transition-all min-h-[100px] flex items-center justify-center"
               >
                 <div>
-                  <div className="w-10 h-10 mx-auto mb-2 bg-gray-200 rounded-full flex items-center justify-center">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-gray-600">
+                  <div className="w-12 h-12 mx-auto mb-3 bg-muted-foreground/10 rounded-full flex items-center justify-center">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-muted-foreground">
                       <line x1="18" y1="6" x2="6" y2="18"></line>
                       <line x1="6" y1="6" x2="18" y2="18"></line>
                     </svg>
                   </div>
-                  <p className="font-medium text-gray-700">Неактуально</p>
+                  <p className="font-medium text-muted-foreground">Неактуально</p>
                 </div>
               </DroppableArea>
 
               <DroppableArea
                 id="together"
-                className="fair-share-green-bg hover:opacity-90 rounded-xl p-6 text-center border-2 border-dashed border-green-400 transition-all min-h-[80px] flex items-center justify-center text-white"
+                className="fs-success-bg hover:opacity-90 rounded-xl p-6 text-center border-2 border-dashed border-success transition-all min-h-[100px] flex items-center justify-center text-white"
               >
                 <div>
-                  <div className="w-10 h-10 mx-auto mb-2 bg-green-200 rounded-full flex items-center justify-center">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-green-700">
+                  <div className="w-12 h-12 mx-auto mb-3 bg-white/20 rounded-full flex items-center justify-center">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-white">
                       <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
                       <circle cx="9" cy="7" r="4"></circle>
-                      <path d="m22 21-3-3m0 0a5 5 0 0 0-12-2 4 4 0 0 0-1 7.5"></path>
+                      <path d="m22 21-3-3m0 0a5 5 0 0 0-7 0 5 5 0 0 0 7 0z"></path>
                     </svg>
                   </div>
                   <p className="font-medium">Делаем вместе</p>
@@ -308,35 +330,37 @@ export default function GamePage() {
 
             {/* Feedback Message */}
             {showFeedback && (
-              <div className="text-center fair-share-green font-medium mb-8 animate-pulse">
-                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                  <p className="text-green-800">{feedbackMessage}</p>
+              <div className="text-center mb-8">
+                <div className="inline-block fs-success-bg/10 border border-success/20 rounded-xl p-4 animate-pulse">
+                  <p className="text-success font-medium">{feedbackMessage}</p>
                 </div>
               </div>
             )}
 
             {/* Task Counter */}
-            <div className="flex justify-center space-x-8 text-center">
-              <div className="bg-gray-50 rounded-lg p-4">
-                <div className="flex items-center justify-center space-x-2 mb-2">
-                  <div className="w-3 h-3 fair-share-blue-bg rounded-full"></div>
-                  <span className="font-medium">{gameData.participant1}</span>
+            <div className="flex justify-center">
+              <div className="grid grid-cols-3 gap-6 text-center">
+                <div className="fs-card rounded-xl p-4">
+                  <div className="flex items-center justify-center space-x-2 mb-2">
+                    <div className="w-3 h-3 fs-primary-bg rounded-full"></div>
+                    <span className="font-medium text-foreground text-sm">{gameData.participant1}</span>
+                  </div>
+                  <div className="text-3xl font-semibold text-primary">{gameData.participant1Tasks}</div>
                 </div>
-                <div className="text-2xl font-semibold">{gameData.participant1Tasks}</div>
-              </div>
-              <div className="bg-gray-50 rounded-lg p-4">
-                <div className="flex items-center justify-center space-x-2 mb-2">
-                  <div className="w-3 h-3 fair-share-blue-bg rounded-full"></div>
-                  <span className="font-medium">{gameData.participant2}</span>
+                <div className="fs-card rounded-xl p-4">
+                  <div className="flex items-center justify-center space-x-2 mb-2">
+                    <div className="w-3 h-3 fs-success-bg rounded-full"></div>
+                    <span className="font-medium text-foreground text-sm">{gameData.participant2}</span>
+                  </div>
+                  <div className="text-3xl font-semibold text-success">{gameData.participant2Tasks}</div>
                 </div>
-                <div className="text-2xl font-semibold">{gameData.participant2Tasks}</div>
-              </div>
-              <div className="bg-gray-50 rounded-lg p-4">
-                <div className="flex items-center justify-center space-x-2 mb-2">
-                  <div className="w-3 h-3 fair-share-green-bg rounded-full"></div>
-                  <span className="font-medium">Вместе</span>
+                <div className="fs-card rounded-xl p-4">
+                  <div className="flex items-center justify-center space-x-2 mb-2">
+                    <div className="w-3 h-3 fs-success-bg rounded-full"></div>
+                    <span className="font-medium text-foreground text-sm">Вместе</span>
+                  </div>
+                  <div className="text-3xl font-semibold text-success">{gameData.togetherTasks}</div>
                 </div>
-                <div className="text-2xl font-semibold">{gameData.togetherTasks}</div>
               </div>
             </div>
           </div>
@@ -344,7 +368,7 @@ export default function GamePage() {
       </div>
 
       <DragOverlay>
-        {activeId ? <TaskCard task={currentTask} className="rotate-3 shadow-2xl" /> : null}
+        {activeId ? <TaskCard task={currentTask} className="rotate-3 shadow-2xl scale-110" /> : null}
       </DragOverlay>
     </DndContext>
   );

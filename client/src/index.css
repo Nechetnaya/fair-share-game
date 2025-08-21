@@ -5,36 +5,36 @@
 @tailwind utilities;
 
 :root {
-  --background: hsl(0, 0%, 100%);
-  --foreground: hsl(210, 25%, 7.8%);
+  --background: hsl(0, 0%, 98%);
+  --foreground: hsl(210, 25%, 15%);
   --card: hsl(0, 0%, 100%);
-  --card-foreground: hsl(210, 25%, 7.8%);
+  --card-foreground: hsl(210, 25%, 15%);
   --popover: hsl(0, 0%, 100%);
-  --popover-foreground: hsl(210, 25%, 7.8%);
-  --primary: hsl(215, 100%, 66%);
+  --popover-foreground: hsl(210, 25%, 15%);
+  --primary: hsl(219, 100%, 62%);
   --primary-foreground: hsl(0, 0%, 100%);
-  --secondary: hsl(210, 40%, 98%);
-  --secondary-foreground: hsl(210, 40%, 45%);
-  --muted: hsl(210, 40%, 96%);
-  --muted-foreground: hsl(210, 40%, 45%);
-  --accent: hsl(210, 40%, 96%);
-  --accent-foreground: hsl(210, 40%, 45%);
+  --secondary: hsl(210, 40%, 96%);
+  --secondary-foreground: hsl(210, 30%, 40%);
+  --muted: hsl(210, 40%, 94%);
+  --muted-foreground: hsl(210, 25%, 55%);
+  --accent: hsl(210, 40%, 94%);
+  --accent-foreground: hsl(210, 30%, 40%);
   --destructive: hsl(0, 84%, 60%);
   --destructive-foreground: hsl(0, 0%, 100%);
-  --border: hsl(214, 32%, 91%);
-  --input: hsl(214, 32%, 91%);
-  --ring: hsl(215, 100%, 66%);
-  --success: hsl(142, 76%, 36%);
+  --border: hsl(214, 32%, 88%);
+  --input: hsl(214, 32%, 88%);
+  --ring: hsl(219, 100%, 62%);
+  --success: hsl(142, 69%, 48%);
   --success-foreground: hsl(0, 0%, 100%);
-  --chart-1: hsl(215, 100%, 66%);
-  --chart-2: hsl(159, 100%, 36%);
-  --chart-3: hsl(42, 93%, 56%);
-  --chart-4: hsl(147, 79%, 42%);
-  --chart-5: hsl(341, 75%, 51%);
-  --font-sans: 'Inter', 'Open Sans', sans-serif;
+  --chart-1: hsl(219, 100%, 62%);
+  --chart-2: hsl(142, 69%, 48%);
+  --chart-3: hsl(45, 93%, 58%);
+  --chart-4: hsl(340, 75%, 55%);
+  --chart-5: hsl(291, 64%, 52%);
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-serif: Georgia, serif;
   --font-mono: Menlo, monospace;
-  --radius: 0.75rem;
+  --radius: 1rem;
 }
 
 .dark {
@@ -68,30 +68,68 @@
 
   body {
     @apply font-sans antialiased bg-background text-foreground;
+    font-feature-settings: "cv11", "ss01";
+    font-variation-settings: "opsz" 32;
   }
 
-  /* Custom utility classes for Fair Share Game */
-  .fair-share-blue {
-    color: hsl(215, 100%, 66%);
+  h1, h2, h3 {
+    font-weight: 600;
+    letter-spacing: -0.025em;
   }
 
-  .fair-share-blue-bg {
-    background-color: hsl(215, 100%, 66%);
+  /* Modern Fair Share Game styles */
+  .fs-primary {
+    color: hsl(219, 100%, 62%);
   }
 
-  .fair-share-green {
-    color: hsl(142, 76%, 36%);
+  .fs-primary-bg {
+    background-color: hsl(219, 100%, 62%);
   }
 
-  .fair-share-green-bg {
-    background-color: hsl(142, 76%, 36%);
+  .fs-success {
+    color: hsl(142, 69%, 48%);
   }
 
-  .gradient-hero {
-    background: linear-gradient(to bottom, hsl(29, 65%, 92%), hsl(29, 65%, 85%));
+  .fs-success-bg {
+    background-color: hsl(142, 69%, 48%);
   }
 
-  .gradient-task {
-    background: linear-gradient(to bottom, hsl(215, 25%, 27%), hsl(215, 25%, 20%));
+  .fs-neutral {
+    color: hsl(210, 25%, 55%);
+  }
+
+  .fs-neutral-bg {
+    background-color: hsl(210, 25%, 55%);
+  }
+
+  .fs-card {
+    background: linear-gradient(145deg, hsl(0, 0%, 100%), hsl(210, 20%, 98%));
+    box-shadow: 0 4px 6px -1px hsl(210, 25%, 85%);
+    border: 1px solid hsl(214, 32%, 91%);
+  }
+
+  .fs-gradient-hero {
+    background: linear-gradient(135deg, hsl(219, 100%, 96%), hsl(142, 69%, 96%));
+  }
+
+  .fs-task-card {
+    background: hsl(0, 0%, 100%);
+    border: 2px solid hsl(214, 32%, 91%);
+    box-shadow: 0 2px 8px -2px hsl(210, 25%, 80%);
+  }
+
+  .fs-task-card:hover {
+    border-color: hsl(219, 100%, 62%);
+    box-shadow: 0 4px 12px -2px hsl(219, 100%, 85%);
+  }
+
+  .fs-drop-zone {
+    background: linear-gradient(145deg, hsl(0, 0%, 99%), hsl(210, 20%, 96%));
+    border: 2px dashed hsl(214, 32%, 85%);
+  }
+
+  .fs-drop-zone:hover {
+    border-color: hsl(219, 100%, 62%);
+    background: linear-gradient(145deg, hsl(219, 100%, 98%), hsl(219, 100%, 95%));
   }
 }

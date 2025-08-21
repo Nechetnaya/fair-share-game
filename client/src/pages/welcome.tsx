@@ -5,17 +5,21 @@ export default function WelcomePage() {
   const [, setLocation] = useLocation();
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="flex justify-between items-center p-6 lg:px-12">
+      <header className="flex justify-between items-center p-6 lg:px-12 lg:py-8">
         <div className="flex items-center">
-          <span className="text-xl font-medium text-gray-900">Fair Share</span>
+          <span className="text-2xl font-semibold text-foreground">Fair Share</span>
         </div>
-        <nav className="hidden md:flex space-x-8">
-          <a href="#" className="text-gray-600 hover:text-gray-900">Как это работает</a>
-          <a href="#" className="text-gray-600 hover:text-gray-900">О игре</a>
+        <nav className="hidden md:flex items-center space-x-8">
+          <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+            Как это работает
+          </a>
+          <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+            О игре
+          </a>
           <Button 
-            className="fair-share-blue-bg text-white hover:opacity-90"
+            className="fs-primary-bg text-white px-6 py-2 text-sm font-medium rounded-full hover:opacity-90 transition-opacity"
             onClick={() => setLocation('/setup')}
           >
             Играть
@@ -24,58 +28,82 @@ export default function WelcomePage() {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col items-center justify-center px-6 lg:px-12 -mt-20">
-        <div className="max-w-2xl w-full text-center space-y-8">
-          <h1 className="text-3xl lg:text-4xl font-semibold text-gray-900 leading-tight">
-            Fair Share Game
-          </h1>
-          <p className="text-lg text-gray-600">
-            Узнайте, как распределяются домашние обязанности
-          </p>
+      <main className="flex-1 flex flex-col items-center justify-center px-6 lg:px-12 pt-12 pb-20">
+        <div className="max-w-4xl w-full text-center space-y-12">
+          <div className="space-y-6">
+            <h1 className="text-4xl lg:text-5xl font-semibold text-foreground leading-tight">
+              Fair Share Game
+            </h1>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Интерактивная игра для справедливого распределения домашних обязанностей
+            </p>
+          </div>
           
-          {/* Hero Image */}
-          <div className="gradient-hero rounded-2xl p-12 lg:p-16 my-12">
+          {/* Hero Illustration */}
+          <div className="fs-gradient-hero rounded-3xl p-16 my-16">
             <div className="flex items-center justify-center">
-              {/* Simple minimalist illustration like in Figma */}
-              <div className="relative bg-gray-100 rounded-2xl p-12 w-full max-w-lg h-48 flex items-center justify-center">
-                {/* Simple kitchen scene */}
+              {/* Modern minimalist household scene */}
+              <div className="relative w-full max-w-md h-64 flex items-center justify-center">
+                {/* Modern kitchen counter scene */}
                 <div className="relative">
-                  {/* Kitchen counter */}
-                  <div className="w-32 h-16 bg-gray-300 rounded-lg relative">
-                    {/* Sink */}
-                    <div className="w-20 h-12 bg-gray-400 rounded-md absolute top-2 left-6">
-                      <div className="w-16 h-8 bg-gray-200 rounded-sm absolute top-2 left-2"></div>
-                      <div className="w-3 h-3 bg-blue-300 rounded-full absolute top-1 right-2"></div>
+                  {/* Main kitchen island */}
+                  <div className="w-40 h-20 bg-card rounded-2xl shadow-lg relative border border-border">
+                    {/* Sink area */}
+                    <div className="absolute top-3 left-8 w-24 h-14 bg-muted rounded-xl">
+                      <div className="w-20 h-10 bg-card rounded-lg absolute top-2 left-2 shadow-inner"></div>
+                      <div className="w-2 h-2 fs-primary-bg rounded-full absolute top-1 right-2"></div>
                     </div>
-                    {/* Tap */}
-                    <div className="w-2 h-6 bg-gray-500 absolute -top-4 left-12"></div>
-                    <div className="w-4 h-2 bg-gray-500 rounded-t-full absolute -top-6 left-11"></div>
+                    {/* Modern faucet */}
+                    <div className="absolute -top-6 left-16 w-1 h-8 bg-muted-foreground rounded-full"></div>
+                    <div className="absolute -top-8 left-14 w-5 h-3 bg-muted-foreground rounded-t-full"></div>
                   </div>
                   
-                  {/* Simple dishes */}
-                  <div className="absolute -right-6 top-0 space-y-1">
-                    <div className="w-6 h-6 bg-white rounded-full border-2 border-gray-300 shadow-sm"></div>
-                    <div className="w-5 h-5 bg-white rounded-full border-2 border-gray-300 shadow-sm"></div>
-                    <div className="w-4 h-4 bg-white rounded-full border-2 border-gray-300 shadow-sm"></div>
+                  {/* Floating dishes - modern style */}
+                  <div className="absolute -right-8 top-0 space-y-2">
+                    <div className="w-8 h-8 bg-card rounded-full border-2 border-muted shadow-md"></div>
+                    <div className="w-6 h-6 bg-card rounded-full border-2 border-muted shadow-md"></div>
+                    <div className="w-5 h-5 bg-card rounded-full border-2 border-muted shadow-md"></div>
                   </div>
                   
-                  {/* Simple cleaning items */}
-                  <div className="absolute -left-6 top-2 space-y-2">
-                    <div className="w-3 h-8 bg-yellow-300 rounded-full"></div>
-                    <div className="w-4 h-6 bg-green-300 rounded-lg"></div>
+                  {/* Modern cleaning supplies */}
+                  <div className="absolute -left-8 top-4 space-y-3">
+                    <div className="w-4 h-10 fs-success-bg rounded-full shadow-sm"></div>
+                    <div className="w-5 h-8 fs-neutral-bg rounded-xl shadow-sm"></div>
                   </div>
+                  
+                  {/* Subtle accent elements */}
+                  <div className="absolute top-16 left-20 w-2 h-2 fs-primary-bg rounded-full opacity-60"></div>
+                  <div className="absolute top-18 left-8 w-1 h-1 fs-success-bg rounded-full opacity-40"></div>
+                  <div className="absolute top-14 right-2 w-1 h-1 fs-neutral-bg rounded-full opacity-50"></div>
                 </div>
               </div>
             </div>
           </div>
 
-          <Button 
-            size="lg"
-            className="fair-share-blue-bg text-white px-8 py-3 text-lg font-medium hover:opacity-90"
-            onClick={() => setLocation('/setup')}
-          >
-            Начать
-          </Button>
+          <div className="space-y-8">
+            <Button 
+              size="lg"
+              className="fs-primary-bg text-white px-12 py-4 text-lg font-medium rounded-full hover:opacity-90 transition-all hover:scale-105 shadow-lg"
+              onClick={() => setLocation('/setup')}
+            >
+              Начать игру
+            </Button>
+            
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-8 text-sm text-muted-foreground">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 fs-success-bg rounded-full"></div>
+                <span>Поддерживающая атмосфера</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 fs-primary-bg rounded-full"></div>
+                <span>Справедливое распределение</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 fs-neutral-bg rounded-full"></div>
+                <span>Научные исследования</span>
+              </div>
+            </div>
+          </div>
         </div>
       </main>
     </div>
