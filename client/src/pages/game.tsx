@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react"; // <-- добавили useRef
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { loadGameData, saveGameData } from "@/lib/game-storage";
 import { supportiveMessages } from "@/lib/tasks";
+import { taskCategories } from "@/lib/tasks";
 import { GameData } from "@shared/schema";
 import {
   DndContext,
@@ -21,12 +22,12 @@ import {
 } from '@dnd-kit/core';
 
 // Simplified Task Card Component with gradient and no images
-function TaskCard({ task, className }: { task: string; className?: string }) {
+function TaskCard({ task, category, className }: { task: string; category?: string; className?: string }) {
   return (
     <div className={`fs-gradient-hero rounded-2xl p-8 text-center transition-all ${className}`}>
       <div className="space-y-4">
         <div className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
-          Домашняя задача
+          {category || "Домашняя задача"}
         </div>
         <h2 className="text-2xl font-semibold text-foreground leading-tight">{task}</h2>
       </div>
@@ -35,15 +36,10 @@ function TaskCard({ task, className }: { task: string; className?: string }) {
 }
 
 // Draggable Task Card Component
-function DraggableTaskCard({ task, id }: { task: string; id: string }) {
-  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
-    id,
-  });
-
+function DraggableTaskCard({ task, id, category }: { task: string; id: string; category?: string }) {
+  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({ id });
   const style = transform
-    ? {
-        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-      }
+    ? { transform: `translate3d(${transform.x}px, ${transform.y}px, 0)` }
     : undefined;
 
   return (
@@ -56,34 +52,30 @@ function DraggableTaskCard({ task, id }: { task: string; id: string }) {
         isDragging ? 'opacity-50 scale-95' : 'hover:scale-[1.02]'
       }`}
     >
-      <TaskCard task={task} />
+      <TaskCard task={task} category={category} />
     </div>
   );
 }
 
 // Droppable Area Component for participants
-function ParticipantDropArea({ 
-  id, 
-  children, 
+function ParticipantDropArea({
+  id,
+  children,
   className,
   style
-}: { 
-  id: string; 
-  children: React.ReactNode; 
+}: {
+  id: string;
+  children: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
 }) {
-  const { isOver, setNodeRef } = useDroppable({
-    id,
-  });
+  const { isOver, setNodeRef } = useDroppable({ id });
 
   return (
     <div
       ref={setNodeRef}
       style={style}
-      className={`${className} ${
-        isOver ? 'border-primary scale-[1.02] shadow-lg' : ''
-      } transition-all duration-200`}
+      className={`${className} ${isOver ? 'border-primary scale-[1.02] shadow-lg' : ''} transition-all duration-200`}
     >
       {children}
     </div>
@@ -96,13 +88,30 @@ export default function GamePage() {
   const [feedbackMessage, setFeedbackMessage] = useState<string>("");
   const [showFeedback, setShowFeedback] = useState(false);
   const [activeId, setActiveId] = useState<string | null>(null);
-  
+
+  // ---------- Новые состояния и useRef ----------
+  const [showContacts, setShowContacts] = useState(false);
+  const [showHomeConfirm, setShowHomeConfirm] = useState(false);
+  const contactsRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    function onDocClick(e: MouseEvent) {
+      if (contactsRef.current && !contactsRef.current.contains(e.target as Node)) {
+        setShowContacts(false);
+      }
+    }
+    document.addEventListener('mousedown', onDocClick);
+    return () => document.removeEventListener('mousedown', onDocClick);
+  }, []);
+
+  const goHome = () => {
+    setShowHomeConfirm(false);
+    setLocation('/');
+  };
+  // -----------------------------------------------
+
   const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 8,
-      },
-    }),
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
     useSensor(KeyboardSensor)
   );
 
@@ -126,37 +135,22 @@ export default function GamePage() {
     if (!over || !gameData) return;
 
     const droppableId = over.id as string;
-    
-    if (droppableId === 'participant1') {
-      assignTask(1);
-    } else if (droppableId === 'participant2') {
-      assignTask(2);
-    }
+    if (droppableId === 'participant1') assignTask(1);
+    else if (droppableId === 'participant2') assignTask(2);
   };
 
   const assignTask = (participant: 1 | 2 | 'together' | 'not-relevant') => {
     if (!gameData || gameData.currentTaskIndex >= gameData.tasks.length) return;
 
     const updatedGameData = { ...gameData };
+    if (participant === 1) updatedGameData.participant1Tasks++;
+    else if (participant === 2) updatedGameData.participant2Tasks++;
+    else if (participant === 'together') { updatedGameData.togetherTasks++; showSupportiveFeedback(); }
 
-    if (participant === 1) {
-      updatedGameData.participant1Tasks++;
-    } else if (participant === 2) {
-      updatedGameData.participant2Tasks++;
-    } else if (participant === 'together') {
-      updatedGameData.togetherTasks++;
-      showSupportiveFeedback();
-    }
-
-    updatedGameData.completedTasks.push({
-      task: gameData.tasks[gameData.currentTaskIndex],
-      assignedTo: participant
-    });
-
+    updatedGameData.completedTasks.push({ task: gameData.tasks[gameData.currentTaskIndex], assignedTo: participant });
     updatedGameData.currentTaskIndex++;
 
     if (updatedGameData.currentTaskIndex >= updatedGameData.tasks.length) {
-      // Game completed
       saveGameData(updatedGameData);
       setLocation('/results');
     } else {
@@ -169,64 +163,110 @@ export default function GamePage() {
     const randomMessage = supportiveMessages[Math.floor(Math.random() * supportiveMessages.length)];
     setFeedbackMessage(randomMessage);
     setShowFeedback(true);
-    
-    setTimeout(() => {
-      setShowFeedback(false);
-    }, 2000);
+    setTimeout(() => setShowFeedback(false), 2000);
   };
 
   if (!gameData) {
-    return <div className="min-h-screen bg-background flex items-center justify-center">
-      <div className="text-center">
-        <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-        <p className="text-muted-foreground">Загрузка игры...</p>
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Загрузка игры...</p>
+        </div>
       </div>
-    </div>;
+    );
   }
 
   const currentTask = gameData.tasks[gameData.currentTaskIndex];
+
+  let currentCategory = "Домашняя задача";
+  for (const key in taskCategories) {
+    if (taskCategories[key].tasks.includes(currentTask)) {
+      currentCategory = taskCategories[key].name;
+      break;
+    }
+  }
+
   const progress = `Задача ${gameData.currentTaskIndex + 1} из ${gameData.tasks.length}`;
 
-  // Calculate gradient intensity based on task count - darker with each task
   const getParticipantGradient = (taskCount: number, isPlayer1: boolean = true) => {
-    if (taskCount === 0) {
-      return isPlayer1 
-        ? `linear-gradient(145deg, hsl(219, 100%, 98%), hsl(219, 100%, 95%))` 
-        : `linear-gradient(145deg, hsl(142, 69%, 98%), hsl(142, 69%, 95%))`;
-    }
-    
-    // Each task makes it progressively darker
+    if (taskCount === 0) return isPlayer1
+      ? `linear-gradient(145deg, hsl(219, 100%, 98%), hsl(219, 100%, 95%))`
+      : `linear-gradient(145deg, hsl(142, 69%, 98%), hsl(142, 69%, 95%))`;
     const darkenAmount = taskCount * 8;
-    return isPlayer1 
-      ? `linear-gradient(145deg, hsl(219, 100%, ${98 - darkenAmount}%), hsl(219, 100%, ${95 - darkenAmount - 5}%))` 
+    return isPlayer1
+      ? `linear-gradient(145deg, hsl(219, 100%, ${98 - darkenAmount}%), hsl(219, 100%, ${95 - darkenAmount - 5}%))`
       : `linear-gradient(145deg, hsl(142, 69%, ${98 - darkenAmount}%), hsl(142, 69%, ${95 - darkenAmount - 5}%))`;
   };
 
   return (
-    <DndContext 
+    <DndContext
       sensors={sensors}
       collisionDetection={closestCenter}
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
       <div className="min-h-screen bg-background">
-        {/* Header */}
-        <header className="flex justify-between items-center p-6 lg:px-12 lg:py-8">
+        {/* ---------- Header с дропдауном и модалкой ---------- */}
+        <header className="flex justify-between items-center p-6 lg:px-12 lg:py-8 relative">
           <div className="flex items-center">
             <span className="text-2xl font-semibold text-foreground">Fair Share Game</span>
           </div>
+
           <nav className="hidden md:flex items-center space-x-8">
-            <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+            <button
+              onClick={() => setShowHomeConfirm(true)}
+              className="text-muted-foreground hover:text-foreground transition-colors"
+            >
               Главная
-            </a>
-            <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">
-              О игре
-            </a>
-            <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+            </button>
+
+            <button
+              onClick={() => setShowContacts(v => !v)}
+              className="text-muted-foreground hover:text-foreground transition-colors relative"
+              aria-expanded={showContacts}
+              aria-haspopup="true"
+            >
               Контакты
-            </a>
+            </button>
           </nav>
+
+          {/* Contacts dropdown */}
+          {showContacts && (
+            <div
+              ref={contactsRef}
+              className="absolute right-6 top-full mt-2 w-64 bg-white border rounded-lg shadow-lg p-4 z-50"
+            >
+              <div className="text-sm text-muted-foreground mb-2">Контакты</div>
+              <a
+                href="https://github.com/Nechetnaya/fair-share-game"
+                target="_blank"
+                rel="noreferrer"
+                className="block text-primary hover:underline"
+              >
+                GitHub — fair-share-game
+              </a>
+            </div>
+          )}
+
+          {/* Home confirmation modal */}
+          {showHomeConfirm && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center">
+              <div className="absolute inset-0 bg-black/40" onClick={() => setShowHomeConfirm(false)} />
+              <div className="bg-white rounded-lg p-6 shadow-lg z-10 max-w-md w-full">
+                <h3 className="text-lg font-semibold mb-2">Вернуться на главную?</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Если вы вернётесь на главную, текущий прогресс игры не будет сохранён.
+                </p>
+                <div className="flex justify-end space-x-3">
+                  <button onClick={() => setShowHomeConfirm(false)} className="px-4 py-2 rounded-full border">Отмена</button>
+                  <button onClick={goHome} className="px-4 py-2 rounded-full fs-success-bg text-white">Вернуться</button>
+                </div>
+              </div>
+            </div>
+          )}
         </header>
+        {/* ----------------------------------------------------- */}
 
         {/* Game Interface */}
         <main className="flex-1 px-6 lg:px-12 py-8">
@@ -236,10 +276,10 @@ export default function GamePage() {
               <div className="flex items-center justify-center space-x-4">
                 <div className="text-muted-foreground text-lg">{progress}</div>
                 <div className="w-32 h-2 bg-muted rounded-full overflow-hidden">
-                  <div 
+                  <div
                     className="h-full fs-primary-bg transition-all duration-500"
-                    style={{ 
-                      width: `${((gameData.currentTaskIndex) / gameData.tasks.length) * 100}%` 
+                    style={{
+                      width: `${((gameData.currentTaskIndex) / gameData.tasks.length) * 100}%`
                     }}
                   ></div>
                 </div>
@@ -249,9 +289,10 @@ export default function GamePage() {
             {/* Current Task Card */}
             <div className="flex justify-center mb-8">
               <div className="max-w-lg w-full">
-                <DraggableTaskCard 
-                  task={currentTask} 
+                <DraggableTaskCard
+                  task={currentTask}
                   id="current-task"
+                  category={currentCategory}
                 />
               </div>
             </div>
@@ -331,7 +372,7 @@ export default function GamePage() {
       </div>
 
       <DragOverlay>
-        {activeId ? <TaskCard task={currentTask} className="rotate-3 shadow-2xl scale-110" /> : null}
+        {activeId ? <TaskCard task={currentTask} category={currentCategory} className="rotate-3 shadow-2xl scale-110" /> : null}
       </DragOverlay>
     </DndContext>
   );
